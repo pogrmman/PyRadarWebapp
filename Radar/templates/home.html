@@ -1,0 +1,10 @@
+{% extends "template.html" %}
+{% block title %}Site Selection{% endblock %}
+{% block content %}
+    <h2>Enter a 3-Digit Radar Station ID:</h2>
+    <form action="/">
+        <input type="text" name="station" maxlength="3" size="3" style="text-transform:uppercase">
+        <input type="submit" value="Fetch Radar">
+    </form>
+    <br><a href="http://www.nws.noaa.gov/tg/pdf/wsr88d-radar-list.pdf" target="_blank">You can find a list of station codes here.</a><br>
+{% endblock %}
