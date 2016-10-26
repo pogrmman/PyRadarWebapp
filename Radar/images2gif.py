@@ -63,6 +63,8 @@ Usefull links
   * http://www.w3.org/Graphics/GIF/spec-gif89a.txt
 
 """
+# This file was modified slightly to make it kind of work with  this radar webapp, but I don't
+# believe it maintains full functionality
 # todo: This module should be part of imageio (or at least based on)
 
 import os, time
