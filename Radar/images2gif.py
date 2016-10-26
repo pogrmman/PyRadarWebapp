@@ -63,8 +63,9 @@ Usefull links
   * http://www.w3.org/Graphics/GIF/spec-gif89a.txt
 
 """
-# This file is different from the one distributed by pip. I forget where I got it. I may or may not have made some changes myself as well.
+# This file is different from the one distributed by pip. I got it here: https://github.com/isaacgerg/images2gif
 # Differences from the pip version are noted with "#! pip_version_line"
+# It may or may not have full functionality
 
 # todo: This module should be part of imageio (or at least based on)
 
