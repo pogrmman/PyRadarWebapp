@@ -1,0 +1,7 @@
+{% extends "template.html" %}
+{% block title %}Station Does Not Exist{% endblock %}
+{% block content %}
+    <h2>The radar station {{ station }} does not exist!</h2>
+    <a href="http://www.nws.noaa.gov/tg/pdf/wsr88d-radar-list.pdf" target="_blank">You can find a list of station codes here.</a><br>
+    <a href="/">Return to main page.</a>
+{% endblock %}
