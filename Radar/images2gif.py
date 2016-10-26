@@ -63,8 +63,9 @@ Usefull links
   * http://www.w3.org/Graphics/GIF/spec-gif89a.txt
 
 """
-# This file was modified slightly to make it kind of work with  this radar webapp, but I don't
-# believe it maintains full functionality
+# This file is different from the one distributed by pip. I forget where I got it. I may or may not have made some changes myself as well.
+# Differences from the pip version are noted with "#! pip_version_line"
+
 # todo: This module should be part of imageio (or at least based on)
 
 import os, time
@@ -142,7 +143,7 @@ def intToBin(i):
     i1 = i % 256
     i2 = int( i/256)
     # make string (little endian)
-    return i.to_bytes(2,byteorder='little')
+    return i.to_bytes(2,byteorder='little') #! return chr(i1) + chr(i2)
 
 
 class GifWriter:
@@ -158,10 +159,10 @@ class GifWriter:
         Get animation header. To replace PILs getheader()[0] 
         
         """
-        bb = b'GIF89a'
+        bb = b'GIF89a' #! bb = "GIF89a"
         bb += intToBin(im.size[0])
         bb += intToBin(im.size[1])
-        bb += b'\x87\x00\x00'
+        bb += b'\x87\x00\x00' #! bb = "\x87\x00\x00"
         return bb
     
     
@@ -183,7 +184,7 @@ class GifWriter:
             xy  = (0,0)
         
         # Image separator,
-        bb = b'\x2C' 
+        bb = b'\x2C' #! bb = '\x2C'
         
         # Image position and size
         bb += intToBin( xy[0] ) # Left position
@@ -193,7 +194,7 @@ class GifWriter:
         
         # packed field: local color table flag1, interlace0, sorted table0, 
         # reserved00, lct size111=7=2^(7+1)=256.
-        bb += b'\x87' 
+        bb += b'\x87' #! bb += '\x87' 
         
         # LZW minimum size code now comes later, begining of [image data] blocks
         return bb
@@ -214,11 +215,11 @@ class GifWriter:
                     # to mean an infinite number of loops)
                     # Mmm, does not seem to work
         if True:
-            bb = b"\x21\xFF\x0B"  # application extension
-            bb += b"NETSCAPE2.0"
-            bb += b"\x03\x01"
+            bb = b"\x21\xFF\x0B"  # application extension #! bb = "\x21\xFF\x0B"
+            bb += b"NETSCAPE2.0" #! bb += "NETSCAPE2.0"
+            bb += b"\x03\x01" #! bb += "\x03\x01"
             bb += intToBin(loops)
-            bb += b'\x00'  # end
+            bb += b'\x00'  # end #! bb += '\x00'
         return bb
     
     
@@ -241,13 +242,13 @@ class GifWriter:
         
         """
         
-        bb = b'\x21\xF9\x04'        
-        bb += bytes([((dispose & 3) << 2)|(transparent_flag & 1)])  # low bit 1 == transparency,
+        bb = b'\x21\xF9\x04' #! bb = '\x21\xF9\x04'       
+        bb += bytes([((dispose & 3) << 2)|(transparent_flag & 1)])  # low bit 1 == transparency, #! bb += chr(((dispose & 3) << 2)|(transparent_flag & 1))
         # 2nd bit 1 == user input , next 3 bits, the low two of which are used,
         # are dispose.
         bb += intToBin( int(duration*100) ) # in 100th of seconds        
-        bb += bytes([transparency_index])
-        bb += b'\x00'  # end
+        bb += bytes([transparency_index]) #! bb += chr(transparency_index)
+        bb += b'\x00'  # end #! bb += '\x00'
         return bb
     
     
@@ -259,6 +260,7 @@ class GifWriter:
         calculated automatically.
         
         """ 
+        #! image_info = [im.info for im in images ]
         if isinstance(subRectangles, (tuple,list)):
             # xy given directly
             
@@ -296,7 +298,7 @@ class GifWriter:
             images, xy = self.getSubRectangles(images)
         
         # Done
-        return images, xy
+        return images, xy #! return images, xy, image_info
     
     
     def getSubRectangles(self, ims):
@@ -338,8 +340,8 @@ class GifWriter:
             Y = np.argwhere(diff.sum(1))
             # Get rect coordinates
             if X.size and Y.size:
-                x0, x1 = int(X[0][0]), int(X[-1][0]+1)
-                y0, y1 = int(Y[0][0]), int(Y[-1][0]+1)
+                x0, x1 = int(X[0][0]), int(X[-1][0]+1) #! x0, x1 = X[0], X[-1]+1
+                y0, y1 = int(Y[0][0]), int(Y[-1][0]+1) #! y0, y1 = Y[0], Y[-1]+1
             else: # No change ... make it minimal
                 x0, x1 = 0, 2
                 y0, y1 = 0, 2
@@ -424,7 +426,7 @@ class GifWriter:
         # Obtain palette for all images and count each occurance
         palettes, occur = [], []
         for im in images:            
-            palettes.append( getheader(im)[0][3] )
+            palettes.append( getheader(im)[0][3] ) #! palettes.append( getheader(im)[1] )
         for palette in palettes:
             occur.append( palettes.count( palette ) )
         
@@ -475,7 +477,7 @@ class GifWriter:
                     fp.write(graphext)
                     fp.write(lid) # write suitable image descriptor
                     fp.write(palette) # write local color table
-                    fp.write(b'\x08') # LZW minimum size code
+                    fp.write(b'\x08') # LZW minimum size code #! fp.write('\x08')
                 else:
                     # Use global color palette
                     fp.write(graphext)
@@ -488,7 +490,7 @@ class GifWriter:
             # Prepare for next round
             frames = frames + 1
         
-        fp.write(b';')  # end gif
+        fp.write(b';')  # end gif #! fp.write(";")
         return frames
     
 
@@ -569,7 +571,7 @@ def writeGif(filename, images, duration=0.1, repeat=True, dither=False,
     
     # Check subrectangles
     if subRectangles:
-        images, xy = gifWriter.handleSubRectangles(images, subRectangles)
+        images, xy = gifWriter.handleSubRectangles(images, subRectangles) #! images, xy, images_info = gifWriter.handleSubRectangles(images, subRectangles)
         defaultDispose = 1 # Leave image in place
     else:
         # Normal mode
@@ -1084,8 +1086,8 @@ if __name__ == '__main__':
     im[:,80:120] = 255
     im[-50:-40,:] = 50
     
-    images = [np.uint8(im*1.0), np.uint8(im*0.8), np.uint8(im*0.6), np.uint8(im*0.4), np.uint8(im*0)]
-    writeGif('test.gif',images, duration=0.5, dither=0)
+    images = [np.uint8(im*1.0), np.uint8(im*0.8), np.uint8(im*0.6), np.uint8(im*0.4), np.uint8(im*0)] #! images = [im*1.0, im*0.8, im*0.6, im*0.4, im*0]
+    writeGif('test.gif',images, duration=0.5, dither=0) #! writeGif('lala3.gif',images, duration=0.5, dither=0)
     
-    print('done')
+    print('done') #! 
 
